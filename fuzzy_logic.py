@@ -6,15 +6,18 @@ Available methods are the followings:
 
 Authors: Danusorn Sitdhirasdr <danusorn.si@gmail.com>
 versionadded:: 06-11-2020
+
 '''
 
 import numpy as np
 from warnings import warn
 from scipy.spatial.distance import cdist
 
-__all__ = ['fuzzy_cmeans','_cmeans_','_cmeans_predict']
+__all__ = ['fuzzy_cmeans',
+           '_cmeans_',
+           '_cmeans_predict']
 
-def _cmeans_(X, U, m=2, metric='euclidean'):
+def _cmeans_(X, U, m=2, metric="euclidean"):
     
     '''
     Single step in generic fuzzy c-means clustering 
@@ -26,29 +29,30 @@ def _cmeans_(X, U, m=2, metric='euclidean'):
     Parameters
     ----------
     X : 2d-array, shape of (n_sample, n_feature)
-    \t Training instances to cluster.
+        Training instances to cluster.
         
     U : 2d-array, shape of (n_sample, n_cluster)
-    \t Fuzzy c-partitioned matrix.
+        Fuzzy c-partitioned matrix.
         
-    m : `float`, optional, default:2
-    \t Weighting parameter.
+    m : float, default=2
+        Weighting parameter.
 
-    metric: `str`, optional, default:'euclidean'
-    \t The distance metric to use. Passes any option 
-    \t accepted by `scipy.spatial.distance.cdist`.
+    metric: `str`, optional, default="euclidean"
+        The distance metric to use. Passes any option 
+        accepted by `scipy.spatial.distance.cdist`.
 
     Returns
     -------
     cntr : 2d-array, shape of (n_cluster, n_feature)
-    \t Cluster centers.  
+        Cluster centers.  
         
     u : 2d-array, shape of (n_sample, n_cluster)
-    \t Updated fuzzy c-partitioned matrix.
+        Updated fuzzy c-partitioned matrix.
         
-    jm : `float`
-    \t Objective function.
+    jm : float
+        Objective function.
     '''
+    
     # Normalize "fuzzy c-partition" then eliminating 
     # any potential zero values.
     U0 = U.T.copy()
@@ -75,7 +79,7 @@ def _cmeans_(X, U, m=2, metric='euclidean'):
 
     return cntr, u.T, jm
 
-def _cmeans_predict(X, U, cntr, m=2, metric='euclidean'):
+def _cmeans_predict(X, U, cntr, m=2, metric="euclidean"):
     
     '''
     Very similar to initial clustering, except `cntr` is not 
@@ -86,28 +90,28 @@ def _cmeans_predict(X, U, cntr, m=2, metric='euclidean'):
     Parameters
     ----------
     X : 2d-array, shape of (n_sample, n_feature)
-    \t Training instances to cluster.
+        Training instances to cluster.
         
     U : 2d-array, shape of (n_sample, n_cluster)
-    \t Fuzzy c-partitioned matrix.
+        Fuzzy c-partitioned matrix.
     
     cntr : 2d-array, shape of (n_cluster, n_feature)
-    \t Cluster centers.
+        Cluster centers.
     
-    m : `float`, optional, default:2
-    \t Weighting parameter.
+    m : float, default=2
+        Weighting parameter.
 
-    metric: `str`, optional, default:'euclidean'
-    \t The distance metric to use. Passes any option 
-    \t accepted by `scipy.spatial.distance.cdist`.
+    metric: str, default="euclidean"
+        The distance metric to use. Passes any option 
+        accepted by `scipy.spatial.distance.cdist`.
 
     Returns
     -------   
     u : 2d-array, shape of (n_sample, n_cluster)
-    \t Updated fuzzy c-partitioned matrix.
+        Updated fuzzy c-partitioned matrix.
         
-    jm : `float`
-    \t Objective function.
+    jm : float
+        Objective function.
     '''
     # Normalize "fuzzy c-partition" then eliminating 
     # any potential zero values.
@@ -132,83 +136,84 @@ def _cmeans_predict(X, U, cntr, m=2, metric='euclidean'):
     return u.T, jm
 
 class fuzzy_cmeans:
+    
     '''
-    `Fuzzy c-Means` (also referred to as soft clustering) is 
-    a form of clustering in which each instance can belong 
-    to more than one cluster.
+    `Fuzzy c-Means` (also referred to as soft 
+    clustering) is a form of clustering in which each 
+    instance can belong to more than one cluster.
     
     .. versionadded:: 05-11-2020
     
     Parameters
     ----------
-    n_clusters : `int`, optional, default:2
-    \t Number of clusters. This is relevant when 
-    \t `init` is None.
+    n_clusters : int, default=2
+        Number of clusters. This is relevant when 
+        init is None.
 
     init : 2d-array, shape of (n_sample, n_cluster)
-    \t Initial fuzzy c-partitioned matrix. If `None` 
-    \t provided, algorithm is randomly initialized.
+        Initial fuzzy c-partitioned matrix. If None 
+        provided, algorithm is randomly initialized.
 
-    n_init : `int`, optional, default:10
-    \t Number of time the algorithm will be run with 
-    \t different initial fuzzy c-partitioned matrix. 
-    \t The final results will be the best output of
-    \t `n_init` consecutive runs in terms of `jm`.
+    n_init : int, default=10
+        Number of time the algorithm will be run with 
+        different initial fuzzy c-partitioned matrix. 
+        The final results will be the best output of
+        n_init consecutive runs in terms of jm.
 
-    m : `float`, optional, default:2
-    \t Weighting parameter.
+    m : float, default=2
+        Weighting parameter.
 
-    metric: `str`, optional, default:'euclidean'
-    \t The distance metric to use. Passes any option 
-    \t accepted by `scipy.spatial.distance.cdist`.
+    metric: str, default="euclidean"
+        The distance metric to use. Passes any option 
+        accepted by `scipy.spatial.distance.cdist`.
 
-    max_iter : `int`, optional, default:300
-    \t Maximum number of iterations of `fuzzy_cmeans` 
-    \t algorithm for a single run.
+    max_iter : int, default=300
+        Maximum number of iterations of `fuzzy_cmeans` 
+        algorithm for a single run.
 
     tol : float, default=1e-4
-    \t Tolerance with regards to Frobenius norm of 
-    \t the difference in the cluster centers of two 
-    \t consecutive iterations to declare convergence.
+        Tolerance with regards to Frobenius norm of 
+        the difference in the cluster centers of two 
+        consecutive iterations to declare convergence.
 
-    random_state : `int`, optional, default:None
-    \t Determines random number generation for fuzzy 
-    \t c-partitioned matrix initialization.
+    random_state : int, default=None
+        Determines random number generation for fuzzy 
+        c-partitioned matrix initialization.
     
     Attributes
     ----------
     centers_ : 2d-array, shape of (n_cluster, n_feature)
-    \t Cluster centers.  
+        Cluster centers.  
 
     initial_u : 2d-array, shape of (n_sample, n_cluster)
-    \t Initial fuzzy c-partitioned matrix.
+        Initial fuzzy c-partitioned matrix.
 
     partition : 2d-array, shape of (n_sample, n_cluster)
-    \t Lastest fuzzy c-partitioned matrix.
+        Lastest fuzzy c-partitioned matrix.
 
-    jm : list of `float`
-    \t List of objective functions as per iteration.
+    jm : list of float
+        List of objective functions as per iteration.
 
-    iter_centers_ : `list` of 2D arrays
-    \t List of cluster centers as per iteration.
+    iter_centers_ : list of 2D-arrays
+        List of cluster centers as per iteration.
 
-    n_iter : `int`
-    \t Number of iterations used in determine cluster
-    \t centers.
+    n_iter : int
+        Number of iterations used in determine cluster 
+        centers.
 
-    labels_ : 1D array of `int`
-    \t Index of the centroid the i'th observation is 
-    \t closest to (crisp clustering)
+    labels_ : 1D-array of int
+        Index of the centroid the i'th observation is 
+        closest to (crisp clustering)
     
-    inertia_ : `float`
-    \t Sum of squared distances of samples to their 
-    \t closest cluster center.
+    inertia_ : float
+        Sum of squared distances of samples to their 
+        closest cluster center.
     
     References
     ----------
-    [1] Ross, Timothy J. Fuzzy Logic With Engineering Applications, 
-        3rd ed. Wiley. 2010. ISBN 978-0-470-74376-8 pp 352-353, 
-        eq 10.28 - 10.35.
+    .. [1] Ross, Timothy J. Fuzzy Logic With Engineering 
+           Applications, 3rd ed. Wiley. 2010. ISBN 
+           978-0-470-74376-8 pp 352-353, eq 10.28 - 10.35.
         
     Examples
     --------
@@ -221,24 +226,26 @@ class fuzzy_cmeans:
     >>> model = fuzzy_cmeans(n_clusters=4, m=2)
     >>> model.fit_predict(X)
     
-    # Example of attributes.
+    Example of attributes.
     >>> model.centers_ # Cluster centers
     >>> model.partition # The latest partition matrix
     >>> model.labels_ # Hard clustering
     >>> self.inertia_ # Within sum of squared distances
     
-    # Predict new data.
+    Predict new data.
     >>> new_X, y = make_blobs(n_samples=50, centers=4, 
-    ...                       n_features=2, random_state=99)
+    ...                       n_features=2, 
+    ...                       random_state=99)
     
-    # Predict `new_X`, This is equivalent to calling 
-    # `fit_predict(X)` followed by `predict(new_X)`.
+    Predict new_X, This is equivalent to calling 
+    fit_predict(X) followed by predict(new_X).
     >>> model.predict(new_X)
     
-    # Transform `X` to cluster-distance space. This is 
-    # equivalent to calling `fit_predict(X)` followed by
-    # `transform(X)`.
+    Transform X to cluster-distance space. This is 
+    equivalent to calling fit_predict(X) followed by
+    transform(X).
     >>> model.transform(X)
+    
     '''
     def __init__(self, n_clusters=2, init=None, n_init=10, m=2, 
                  metric='euclidean', max_iter=300, tol=0.0001, 
@@ -345,6 +352,7 @@ class fuzzy_cmeans:
         return c, u1, Jm, cntr, n, inertia
     
     def fit_predict(self, X):
+        
         '''
         Compute fuzzy c-means cluster centers and predict 
         cluster index for each sample (also referred to as 
@@ -353,7 +361,8 @@ class fuzzy_cmeans:
         Parameters
         ----------
         X : 2d-array, shape of (n_sample, n_feature)
-        \t Training instances to cluster.
+            Training instances to cluster.
+            
         '''
         self._check_params(X)
         
@@ -395,47 +404,47 @@ class fuzzy_cmeans:
         Parameters
         ----------
         X : 2d-array, shape of (n_sample, n_feature)
-        \t Training instances to cluster.
+            Training instances to cluster.
         
         init : 2d-array, shape of (n_sample, n_cluster)
-        \t Initial fuzzy c-partitioned matrix. If `None` 
-        \t provided, algorithm is randomly initialized.
+            Initial fuzzy c-partitioned matrix. If None 
+            provided, algorithm is randomly initialized.
         
-        return_init : `bool`, optional, default:False
-        \t If `True`, also return Initial fuzzy 
-        \t c-partitioned matrix. It is relevant when 
-        \t `init` is none or random generation is 
-        \t initialized.
+        return_init : bool, default=False
+            If True, also return Initial fuzzy c-partitioned 
+            matrix. It is relevant when init is none or 
+            random generation is initialized.
         
-        return_jm : `bool`, optional, default:False
-        \t If `True`, also return list of objective
-        \t function values as per iteration.
+        return_jm : bool, default=False
+            If True, also return list of objective function 
+            values as per iteration.
         
-        return_inertia : `bool`, optional, default:False
-        \t If `True`, also return sum of squared distances
-        \t of all instances.
+        return_inertia : bool, default=False
+            If True, also return sum of squared distances 
+            of all instances.
         
         Returns
         -------
         u1 : 2d-array, shape of (n_sample, n_cluster)
-        \t Lastest fuzzy c-partitioned matrix.
+            Lastest fuzzy c-partitioned matrix.
         
-        labels_ : 1D array of `int`
-        \t Index of the centroid the i'th observation is 
-        \t closest to.
+        labels_ : 1D array of int
+            Index of the centroid the i'th observation is 
+            closest to.
         
         u0 : 2d-array, shape of (n_sample, n_cluster)
-        \t Initial fuzzy c-partitioned matrix. Only provided 
-        \t if `return_init` is `True`.
+            Initial fuzzy c-partitioned matrix. Only provided 
+            if return_init is True.
         
-        Jm : list of `float`, optional
-        \t List of objective functions as per iteration.
-        \t Only provided if `return_jm` is `True`.
+        Jm : list of float, optional
+            List of objective functions as per iteration.
+            Only provided if return_jm is True.
         
-        inertia_ : `float`, optional
-        \t Sum of squared distances of samples to their 
-        \t closest cluster center. Only provided if
-        \t `return_inertia` is `True`.
+        inertia_ : float, optional
+            Sum of squared distances of samples to their 
+            closest cluster center. Only provided if
+            return_inertia` is True.
+            
         '''
         # If init is none, the partition matrix is randomly
         # generated (fixed `random_state`), otherwise it uses
@@ -509,12 +518,13 @@ class fuzzy_cmeans:
         Parameters
         ----------
         X : 2d-array, shape of (n_sample, n_feature)
-        \t Training instances to transform.
+            Training instances to transform.
             
         Returns
         -------
         X_new : array, shape [n_samples, k]
-        \t X transformed in the new space.
+            X transformed in the new space.
+            
         '''
         d = cdist(X, self.centers_, metric='euclidean')
         return np.amin(d, axis=1)
